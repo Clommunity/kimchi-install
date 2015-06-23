@@ -1,0 +1,53 @@
+#!/bin/sh
+#
+### BEGIN INIT INFO
+# Provides:          kimchid 
+# Required-Start:    $local_fs $remote_fs $network $syslog $named 
+# Required-Stop:     $local_fs $remote_fs $network $syslog $named 
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# X-Interactive:     true
+# Short-Description: Start/Stop HTML5 based management tool for KVM. 
+### END INIT INFO
+
+NAME=kimchid
+KIMCHIPATH="/usr/bin/"
+KIMCHIBIN="$KIMCHIPATH/$NAME"
+PIDFILE="/var/run/kimchid.pid"
+BIND_IP="0.0.0.0"
+KIMCHILOG=/dev/null
+
+start() {
+	[ -f $PIDFILE ] && exit 1;
+	$KIMCHIBIN --host=$BIND_IP >> $KIMCHILOG 2>&1 & 
+	echo $! > $PIDFILE  
+}
+stop() {
+  kill -9 $(cat $PIDFILE)
+  rm $PIDFILE
+}
+restart() {
+  stop
+  sleep 0.5
+  start
+}
+
+case "$1" in
+  start)
+    start
+  ;;
+  stop)
+    stop
+  ;;
+  restart)
+    restart
+  ;;
+  *)
+    echo "Usage: /etc/init.d/$NAME {start|stop|restart}"
+    exit 1
+  ;;
+esac
+
+exit 0
+
+
