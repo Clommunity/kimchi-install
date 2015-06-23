@@ -20,6 +20,6 @@ dpkg -i kimchi-1.4.1-*.noarch.deb
 cp kimchid /etc/init.d/
 
 update-rc.d kimchid defaults
-/etc/init.d/kimchid start
+#/etc/init.d/kimchid start
 
 
